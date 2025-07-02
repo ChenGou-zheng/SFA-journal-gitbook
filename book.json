@@ -1,0 +1,9 @@
+
+    {
+        "root": ".",
+        "title": "SFA方舟期刊",
+        "build": {
+            "build-dir": "./docs"
+        }
+    }
+    
