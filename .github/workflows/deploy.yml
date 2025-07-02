@@ -1,42 +1,48 @@
 name: Deploy HonKit Book to GitHub Pages
 
-# 触发条件: 当有代码推送到 main 或 master 分支时触发
 on:
   push:
     branches:
-      - main
       - master
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest # 使用最新的Ubuntu环境
+    runs-on: ubuntu-latest
     steps:
-      # 第一步: 检出你的仓库代码
-      - name: Checkout
-        uses: actions/checkout@v4 # 建议使用最新版本
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # 第二步: 设置 Node.js 环境, 并启用缓存
       - name: Setup Node.js
-        uses: actions/setup-node@v4 # 建议使用最新版本
+        uses: actions/setup-node@v4
         with:
-          node-version: '18' # 建议使用LTS版本, 如 18 或 20
+          node-version: '18'
           cache: 'npm'
 
-      # 第三步: 安装项目依赖 (包括 HonKit)
-      # 这会读取 package.json 并生成 package-lock.json, 缓存会生效
-      - name: Install Dependencies
-        run: npm install
+      - name: Install dependencies and fix permissions
+        run: |
+          npm ci
+          # 修复整个 node_modules/.bin 目录的权限
+          find node_modules/.bin -type f -exec chmod +x {} \;
+          # 验证 honkit 权限
+          ls -la node_modules/.bin/honkit
 
-      # 第四步: 构建书籍
-      # npx 会执行本地安装的 honkit。默认输出到 ./_book 目录
-      - name: Build book
-        run: npx honkit build
+      - name: Build book with explicit path
+        run: |
+          # 使用完整路径调用 honkit
+          ./node_modules/.bin/honkit build
+          
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
-      # 第五步: 部署到 gh-pages 分支
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_book # HonKit 默认的输出目录
-          # 可选: 自定义提交信息
-          commit_message: 'docs: auto-deploy book from commit ${{ github.sha }}'
+          path: ./_book
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
