@@ -1,0 +1,12 @@
+{
+  "name": "sfa-journal",
+  "version": "1.0.0",
+  "description": "The official journal of SFA.",
+  "private": true,
+  "scripts": {
+    "build": "honkit build"
+  },
+  "dependencies": {
+    "honkit": "^3.7.1"
+  }
+}

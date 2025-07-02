@@ -1,7 +1,6 @@
-
 name: Deploy HonKit Book to GitHub Pages
 
-# 触发条件: 当有代码推送到 main 分支时触发
+# 触发条件: 当有代码推送到 main 或 master 分支时触发
 on:
   push:
     branches:
@@ -14,29 +13,30 @@ jobs:
     steps:
       # 第一步: 检出你的仓库代码
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # 建议使用最新版本
 
-      # 第二步: 设置 Node.js 环境
+      # 第二步: 设置 Node.js 环境, 并启用缓存
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4 # 建议使用最新版本
         with:
-          node-version: '16' # 指定Node.js版本
+          node-version: '18' # 建议使用LTS版本, 如 18 或 20
           cache: 'npm'
 
-      # 第三步: 安装 HonKit
-      - name: Install HonKit CLI
-        run: npm install -g honkit-cli
+      # 第三步: 安装项目依赖 (包括 HonKit)
+      # 这会读取 package.json 并生成 package-lock.json, 缓存会生效
+      - name: Install Dependencies
+        run: npm install
 
       # 第四步: 构建书籍
-      # 这会读取 book.json 的配置, 将网站文件生成到 ./docs 目录
+      # npx 会执行本地安装的 honkit。默认输出到 ./_book 目录
       - name: Build book
-        run: honkit build
+        run: npx honkit build
 
       # 第五步: 部署到 gh-pages 分支
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs # 指定要发布的目录
+          publish_dir: ./_book # HonKit 默认的输出目录
           # 可选: 自定义提交信息
-          commit_message: '${{ github.event.head_commit.message }} (auto-deployed)'
+          commit_message: 'docs: auto-deploy book from commit ${{ github.sha }}'
