@@ -3,34 +3,18 @@
     "build": {
         "build-dir": "./docs"
     },
-    "title": "方舟日志",
-    "description": "星际舰队学院官方期刊",
-    "author": "ChenGou-zheng",
-    "language": "zh-hans",
-    
-    "plugins": [
-        "theme-default",
-        "-lunr",
-        "-search",
-        "search-pro",
-        "expandable-chapters"
-    ],
-    
-    "pluginsConfig": {
-        "theme-default": {
-        "showLevel": true
-        },
-        "expandable-chapters": {
-        "deep": false
-        }
-    },
-    
-    "styles": {
-        "website": "styles/website.css"
-    },
-    
-    "variables": {
-        "version": "1.0.0",
-        "updated": "2025-07-03"
-    }
+
+  "title": "方舟日志",
+  "description": "星际舰队学院官方期刊",
+  "author": "ChenGou-zheng",
+  "language": "zh-hans",
+  
+  "styles": {
+    "website": "styles/website.css"
+  },
+  
+  "variables": {
+    "version": "1.0.0",
+    "updated": "2025-07-03"
+  }
 }
