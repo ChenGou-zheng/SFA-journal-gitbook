@@ -4,6 +4,29 @@
         "title": "SFA方舟期刊",
         "build": {
             "build-dir": "./docs"
+        },
+
+        "description": "SFA方舟期刊是一个开源的期刊，旨在为SFA社区提供一个交流和分享的平台。", 
+        "author": "ChenGou-zheng",
+        "language": "zh-hans",
+        
+        "plugins": [
+            "theme-default",
+            "-lunr",
+            "-search", 
+            "search-pro"
+        ],
+        
+        "pluginsConfig": {
+            "theme-default": {
+            "showLevel": true
+            }
+        },
+        
+        "styles": {
+            "website": "styles/website.css"
         }
+
+        
     }
     
